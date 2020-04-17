@@ -31,16 +31,9 @@ case $1 in
 		fi	
 	;;
 
-
-	'')
-	#empty input - error
-		echo "Improper call to recursive modify!"
-	;; 
-
-
 	*)
 	
-		echo "Recursive sed, non implemented"
+		echo "Improper call to recursive modify!"
 	;;
 	
 
@@ -81,16 +74,12 @@ case $1 in
 	echo "Help"
 	echo 
 
-	echo "To modify filenames by lowercase (l) (or uppercase (u)), type in: "
+	echo "To modify filenames by lowercase (l) (or uppercase (u)) non-recursively, type in: "
+	echo "modify  [-l|-u] <dir/file names...>"
+	echo
+
+	echo "To modify filenames by lowercase (l) (or uppercase (u)) recursively, type in: "
 	echo "modify -r [-l|-u] <dir/file names...>"
-	echo
-
-	echo "To modify filenames by a specific sed pattern, type in: "
-	echo "modify -r <sed pattern> <dir/file names...>"
-	echo
-
-	echo "To modify folder name by lowercase (l) (or uppercase (u)), type in: "
-	echo "modify [-l|-u] <directory/folderName>"
 	echo
 ;;
 
@@ -102,36 +91,7 @@ case $1 in
 
 *)	
 	echo "Improper arguments!!"
-	exit
-
-	expression="$1"
 	
-	while [ -n "$2" ]; do
-		if [ -f "$2" ];then
-		echo "$2 zaczynamy______________"
-			new_name="$(basename "$2")"
-			echo "$expression"
-			echo "$new_name"
-			file_extention="${new_name##*.}"
-			
-			#echo  $(sed -i "s/./\U&/g" $2)
-
-
-
-			echo $(sed  "$expression" $2)
-			
-
-			new_name="$(dirname "$2")/$new_name"
-			echo "Changed name: $new_name"
-			
-			#echo "expression $expression"
-			#new_name="$(sed -n "$expression" $2)"
-			#echo "newname  $result"
-			
-			
-		fi
-	shift
-	done	
 	
 ;;
 

@@ -14,55 +14,59 @@ touch directory/TEST2b_rec.txt
 echo "The setup is:"
 echo "we have a folder \"directory\", which contains the example files, we will rename."
 echo 
-
+read -n 1 -s -r -p "Press any key to continue___________________________"
+echo
+echo
+echo
 echo "Modify has various ways of operating. We will focus first on non-recursive one."
 echo "In this case, syntax is as follows:"
 echo "modify [-l|-u] <dir/file names...>"
 echo "Where -l is lowercase modification, -u is uppercase modification. Every file to be modified is listed later with its corresponding path. Example: "
-
+echo
+echo
 echo "---------------------------------"
-echo "1.  ./modify.sh -u directory/test1.txt"
+echo "1.  ./modify.sh -u directory/test1a_nonr.txt directory/test1b_nonr.txt"
 ./modify.sh -u directory/test1a_nonr.txt directory/test1b_nonr.txt
 echo "2.  ./modify.sh -l directory/TEST2.txt"
 ./modify.sh -l directory/TEST2_nonr.txt
 echo "---------------------------------"
-read -n 1 -s -r -p "Press any key to continue"
-
-
-echo "Here are a few cases with improper use: "
+read -n 1 -s -r -p "Press any key to continue___________________________"
 echo
+echo
+echo
+echo
+echo "Here are a few cases with improper use: "
 echo
 echo "-- no arguments given to function. Result: "
 echo "---------------------------------"
 echo "./modify.sh"
 ./modify.sh
 echo "---------------------------------"
-read -n 1 -s -r -p "Press any key to continue"
-
+read -n 1 -s -r -p "Press any key to continue___________________________"
 echo
 echo
-echo "-- some gibberish written, not sed command"
+echo 
+echo "-- some gibberish written"
 echo "---------------------------------"
 echo "./modify.sh asfhaslfnasf"
 ./modify.sh asfhaslfnasf
-echo 
 echo "---------------------------------"
-
+read -n 1 -s -r -p "Press any key to continue___________________________"
+echo 
+echo 
+echo 
 echo "-- when given improper file directory, the program will not give the user the message, that the conversion was successful, and will simply omit the problematic file directory"
 echo "---------------------------------"
 echo "./modify.sh -l directory/somethingTHATDOESNTEXIST.txt"
 ./modify.sh -l directory/somethingTHATDOESNTEXIST.txt
 echo "./modify.sh -u directory/somethingTHATDOESNTEXISTversion2.txt"
-./modify.sh -l directory/somethingTHATDOESNTEXIST.txt
+./modify.sh -l directory/somethingTHATDOESNTEXISTversion2.txt
 echo 
 echo "---------------------------------"
-
-
-
-
-
-
-
+read -n 1 -s -r -p "Press any key to continue___________________________"
+echo 
+echo 
+echo 
 echo "Here is the recursive version of the same functionality."
 echo "In this case, syntax is as follows:"
 echo "modify -r [-l|-u] <dir/file names...>"
@@ -74,4 +78,7 @@ echo "1.  ./modify.sh -r -l directory/test1.txt"
 echo "2.  ./modify.sh -r -l directory/TEST2a_rec.txt directory/TEST2b_rec.txt"
 ./modify.sh -l directory/TEST2a_rec.txt directory/TEST2b_rec.txt
 echo "---------------------------------"
-read -n 1 -s -r -p "Press any key to continue"
+read -n 1 -s -r -p "Press any key to continue___________________________"
+echo
+echo "As far as errors, the script handles bad directory the same as non-recursive one."
+echo "Since i have not managed to create sed handling, the script just treats any wrong input after -r as a mistake."
