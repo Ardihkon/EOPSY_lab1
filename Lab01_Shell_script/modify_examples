@@ -27,11 +27,12 @@ echo
 echo "---------------------------------"
 echo "1.  ./modify.sh -u directory/test1a_nonr.txt directory/test1b_nonr.txt"
 ./modify.sh -u directory/test1a_nonr.txt directory/test1b_nonr.txt
-echo "2.  ./modify.sh -l directory/TEST2.txt"
+echo "2.  ./modify.sh -l directory/TEST2_nonr.txt"
 ./modify.sh -l directory/TEST2_nonr.txt
 echo "---------------------------------"
-read -n 1 -s -r -p "Press any key to continue___________________________"
 echo
+echo
+read -n 1 -s -r -p "Press any key to continue___________________________"
 echo
 echo
 echo
@@ -42,7 +43,6 @@ echo "---------------------------------"
 echo "./modify.sh"
 ./modify.sh
 echo "---------------------------------"
-read -n 1 -s -r -p "Press any key to continue___________________________"
 echo
 echo
 echo 
@@ -51,18 +51,25 @@ echo "---------------------------------"
 echo "./modify.sh asfhaslfnasf"
 ./modify.sh asfhaslfnasf
 echo "---------------------------------"
+echo
+echo
+
 read -n 1 -s -r -p "Press any key to continue___________________________"
 echo 
 echo 
 echo 
-echo "-- when given improper file directory, the program will not give the user the message, that the conversion was successful, and will simply omit the problematic file directory"
+echo "When given improper file directory, the program will give the user the message, that the conversion was not successful, and will simply omit the problematic file directory"
+echo
+echo
 echo "---------------------------------"
 echo "./modify.sh -l directory/somethingTHATDOESNTEXIST.txt"
 ./modify.sh -l directory/somethingTHATDOESNTEXIST.txt
 echo "./modify.sh -u directory/somethingTHATDOESNTEXISTversion2.txt"
 ./modify.sh -l directory/somethingTHATDOESNTEXISTversion2.txt
-echo 
+
 echo "---------------------------------"
+echo
+
 read -n 1 -s -r -p "Press any key to continue___________________________"
 echo 
 echo 
@@ -73,12 +80,116 @@ echo "modify -r [-l|-u] <dir/file names...>"
 echo "Where -l is lowercase modification, -u is uppercase modification. Every file to be modified is listed later with its corresponding path. Example: "
 
 echo "---------------------------------"
-echo "1.  ./modify.sh -r -l directory/test1.txt"
-./modify.sh -u directory/test1_rec.txt
+echo "1.  ./modify.sh -r -l directory/test1_rec.txt"
+./modify.sh -r -u directory/test1_rec.txt
 echo "2.  ./modify.sh -r -l directory/TEST2a_rec.txt directory/TEST2b_rec.txt"
-./modify.sh -l directory/TEST2a_rec.txt directory/TEST2b_rec.txt
+./modify.sh -r -l directory/TEST2a_rec.txt directory/TEST2b_rec.txt
 echo "---------------------------------"
+echo
 read -n 1 -s -r -p "Press any key to continue___________________________"
 echo
+echo
+echo
 echo "As far as errors, the script handles bad directory the same as non-recursive one."
-echo "Since i have not managed to create sed handling, the script just treats any wrong input after -r as a mistake."
+echo
+read -n 1 -s -r -p "Press any key to continue___________________________"
+echo
+echo
+echo
+echo "Now we come to the last option built into the program: sed instructions."
+echo
+echo "Using sed patterns to direct the name modification, the syntax is as follows:"
+echo "modify -r <sed pattern> <dir/file names...>"
+echo 
+read -n 1 -s -r -p "Press any key to continue___________________________"
+echo
+echo
+echo
+echo "Ok, so first, some simple examples: change uppercase or lowercase, using 's/.*/\U&/' for upper, and for lower 's/.*/\L&/'"
+echo "We will work on files from previous examples."
+echo
+echo "---------------------------------"
+echo "1.  ./modify.sh -r 's/.*/\U&/' directory/test2_nonr.txt"
+./modify.sh -r 's/.*/\U&/' directory/test2_nonr.txt
+echo "2.  ./modify.sh -r 's/.*/\L&/' directory/TEST1_REC.txt"
+./modify.sh -r 's/.*/\L&/' directory/TEST1_REC.txt
+echo "---------------------------------"
+echo 
+read -n 1 -s -r -p "Press any key to continue___________________________"
+echo
+echo
+echo
+echo "Sed does not take flags, as we can input only sed pattern. So no chance for extended expressions."
+echo
+echo
+read -n 1 -s -r -p "Press any key to continue___________________________"
+touch directory/testSED_to_sh.txt
+echo
+echo
+echo
+echo "Now for some unusual use of sed pattern. We will use it, to change the extension of file, to change it into shell script."
+echo "In directory you find testSED_to_sh.txt which in a moment will be a shell script"
+echo
+echo
+read -n 1 -s -r -p "Press any key to continue___________________________"
+echo
+echo
+echo "---------------------------------"
+echo "1.  ./modify.sh -r 's/.txt/.sh/' directory/testSED_to_sh.txt"
+./modify.sh -r 's/.txt/.sh/' /c/Users/filip/bash_script/directory/testSED_to_sh.txt
+echo "---------------------------------"
+echo 
+read -n 1 -s -r -p "Press any key to continue___________________________"
+echo
+echo
+echo
+echo "Finally we will check if sed omits the directory, that was not input well."
+echo "Here we have the sed working on two files,  directory/test_sed_file1.txt and directory/test_sed_file2.txt"
+echo "First file should not be changed, because its name is bad. Second file should be changed properly (have 3 t's instead of d)"
+touch directory/test_sed_file1.txt
+touch directory/test_sed_file2.txt
+echo
+echo
+echo "---------------------------------"
+echo "./modify.sh -r 's/d/TTT/g' directory/test_sed_file1SFASGJSAGJASGSA.txt directory/test_sed_file2.txt"
+./modify.sh -r 's/d/TTT/g' directory/test_sed_file1SFASGJSAGJASGSA.txt directory/test_sed_file2.txt
+echo "---------------------------------"
+echo 
+read -n 1 -s -r -p "Press any key to continue___________________________"
+echo
+echo
+echo
+echo "For improper use, we will input some gibberish to sed pattern, for other test, we will give nothing exept -r"
+echo
+echo
+echo "---------------------------------"
+echo "1.  ./modify.sh -r safasfasfawfa"
+./modify.sh -r safasfasfawfa
+echo
+echo "2.  ./modify.sh -r "
+./modify.sh -r
+echo "---------------------------------"
+echo 
+read -n 1 -s -r -p "Press any key to continue___________________________"
+echo
+echo
+echo
+echo "Here we come to the most improper use. We have to keep in mind, that if we change the files extension it may cause them to malfunction!"
+echo
+touch directory/test_improper_sed_extension.txt
+echo
+read -n 1 -s -r -p "Press any key to continue___________________________"
+echo
+echo
+echo
+echo "Watch what happens if we change file extension to .dsfa."
+echo "Sed should be used carefully, not to destroy the scripts we have done!"
+echo
+echo
+
+echo "---------------------------------"
+echo "./modify.sh -r 's/.txt/.dsfa/' directory/test_improper_sed_extension.txt"
+./modify.sh -r 's/.txt/.dsfa/' directory/test_improper_sed_extension.txt
+echo "---------------------------------"
+echo 
+read -n 1 -s -r -p "Press any key to continue___________________________"
