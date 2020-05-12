@@ -12,18 +12,33 @@ case $1 in
 	case $2 in
 	"-l"|"-L") # lowercase conversion
 
-	if [ -n "$3" ];then	
-		#if such file exists...
-		if [ -f "$3" ];then		
-				#compute new name, by changing basename to all lowercase
-				new_name="$(dirname "$3")/$(basename "$3" | tr '[A-Z]' '[a-z]')"
-				#replace the name of the file
-				mv -T "$3" "${new_name}"
-				echo "Changed to name: $new_name"
-				#call modify again shifting the arguments to left (but replacing -r and -l), so that only the list of files to change reduces by 1
+	# if next argument is valid
+	if [ -n "$3" ]; then
+		if [ -d "$3" ];then	
+				for f in $3/*;do
+					if [ -f $f ];then		
+						#compute new name
+						new_name="$(dirname "$f")/$(basename "$f" | tr '[A-Z]' '[a-z]')"
+						#rename file with new_name
+						mv -T "$f" "${new_name}"
+						echo "Changed name: $new_name"
+					fi
+
+				done	
+			#elif the argument item is a file
+		else
+			if [ -f "$3" ];then		
+					#compute new name
+					new_name="$(dirname "$3")/$(basename "$3" | tr '[A-Z]' '[a-z]')"
+					#rename file with new_name
+					mv -T "$3" "${new_name}"
+					echo "Changed name: $new_name"
 			else
-			echo "Error, no file "$3" found"	
-		fi
+					echo "Error, no file "$3" found"
+			fi
+				
+
+		fi	
 	./$0 -r -l ${@:4}
 	fi
 	
@@ -31,29 +46,62 @@ case $1 in
 	;;
 
 	"-u"|"-U") # uppercase conversion
-	#if there are still arguments
-	if [ -n "$3" ];then	
-		#if such file exists
-		if [ -f "$3" ];then		
-				#compute new name, by changing basename to all lowercase
-				new_name="$(dirname "$3")/$(basename "$3" | tr '[a-z]' '[A-Z]')"
-				#replace the name of the file
-				mv -T "$3" "${new_name}"
-				echo "Changed name: $new_name"
-				#call modify again but erasing the first argument that has been already converted (which would be $3)
+	# if next argument is valid
+	if [ -n "$3" ]; then
+
+		if [ -d "$3" ];then	
+				for f in $3/*;do
+					if [ -f $f ];then		
+						#compute new name
+						new_name="$(dirname "$f")/$(basename "$f" | tr '[a-z]' '[A-Z]')"
+						#rename file with new_name
+						mv -T "$f" "${new_name}"
+						echo "Changed name: $new_name"
+					fi
+
+				done	
+			#elif the argument item is a file
+		else
+			if [ -f "$3" ];then		
+					#compute new name
+					new_name="$(dirname "$3")/$(basename "$3" | tr '[a-z]' '[A-Z]')"
+					#rename file with new_name
+					mv -T "$3" "${new_name}"
+					echo "Changed name: $new_name"
 			else
-			echo "Error, no file "$3" found"	
+					echo "Error, no file "$3" found"
+			fi
+				
+
 		fi	
-		./$0 -r -u ${@:4}
+	./$0 -r -u ${@:4}
 	fi
 	;;
 
 	*)
 	# I assume sed pattern was given
-	# if argument 3 exists
-	if [ -n "$3" ];then	
-		# if argument 3 is a valid file
-		if [ -f "$3" ];then
+	
+
+	# if next argument is valid
+	if [ -n "$3" ]; then
+
+		if [ -d "$3" ];then	
+				for f in $3/*;do
+					if [ -f $f ];then		
+						#convert filename using sed pattern			
+						filename=$(basename "$f" | sed "$2" )
+						#compute new name, by changing basename to all lowercase
+						new_name="$(dirname "$f")/$filename"
+						#replace the name of the file
+						mv -T "$f" "${new_name}"
+						echo "Changed name: $new_name"
+						#call modify recursively but erasing the first argument that has been already converted (which would be $3)
+					fi
+
+				done	
+			#elif the argument item is a file
+		else
+			if [ -f "$3" ];then
 				#convert filename using sed pattern			
 				filename=$(basename "$3" | sed "$2" )
 				#compute new name, by changing basename to all lowercase
@@ -63,13 +111,14 @@ case $1 in
 				echo "Changed name: $new_name"
 				#call modify recursively but erasing the first argument that has been already converted (which would be $3)
 			else
-			echo "Error, no file "$3" found"
-		fi
-		./$0 -r $2 ${@:4}
+				echo "Error, no file "$3" found"
+			fi
+				
+
+		fi	
+	./$0 -r $2 ${@:4}
 	fi
 
-
-		
 	;;
 	
 
@@ -81,16 +130,31 @@ case $1 in
 
 	# while there are still files to convert
 	while [ -n "$2" ]; do
-		# lif the argument item is a file
-		if [ -f "$2" ];then		
-			#compute new name
-			new_name="$(dirname "$2")/$(basename "$2" | tr '[A-Z]' '[a-z]')"
-			#rename file with new_name
-			mv -T "$2" "${new_name}"
-			echo "Changed name: $new_name"
+		if [ -d "$2" ];then	
+				for f in $2/*;do
+					if [ -f $f ];then		
+						#compute new name
+						new_name="$(dirname "$f")/$(basename "$f" | tr '[A-Z]' '[a-z]')"
+						#rename file with new_name
+						mv -T "$f" "${new_name}"
+						echo "Changed name: $new_name"
+					fi
+
+				done	
+			#elif the argument item is a file
 		else
-			echo "Error, no file "$2" found"
-		fi
+			if [ -f "$2" ];then		
+					#compute new name
+					new_name="$(dirname "$2")/$(basename "$2" | tr '[A-Z]' '[a-z]')"
+					#rename file with new_name
+					mv -T "$2" "${new_name}"
+					echo "Changed name: $new_name"
+			else
+					echo "Error, no file "$2" found"
+			fi
+				
+
+		fi	
 	shift
 	done
 ;;
@@ -99,18 +163,33 @@ case $1 in
 
 	# while there are still files to convert
 	while [ -n "$2" ]; do
-		# if the argument item is a file
-		if [ -f "$2" ];then	
-			# compute new name
-			new_name="$(dirname "$2")/$(basename "$2" | tr '[a-z]' '[A-Z]')"
-			#rename file with new_name
-			mv -T "$2" "${new_name}"
-			echo "Changed name: $new_name"
+		if [ -d "$2" ];then	
+				for f in $2/*;do
+					if [ -f $f ];then		
+						#compute new name
+						new_name="$(dirname "$f")/$(basename "$f" | tr '[a-z]' '[A-Z]')"
+						#rename file with new_name
+						mv -T "$f" "${new_name}"
+						echo "Changed name: $new_name"
+					fi
+
+				done	
+			#elif the argument item is a file
 		else
-			echo echo "Error, no file "$2" found"
-		fi
+			if [ -f "$2" ];then		
+					#compute new name
+					new_name="$(dirname "$2")/$(basename "$2" | tr '[a-z]' '[A-Z]')"
+					#rename file with new_name
+					mv -T "$2" "${new_name}"
+					echo "Changed name: $new_name"
+			else
+					echo "Error, no file "$2" found"
+			fi
+				
+
+		fi	
 	shift
-	done	
+	done
 ;;
 
 "-h")
@@ -147,4 +226,21 @@ case $1 in
 esac
 
 
-
+# if argument 3 exists
+#	if [ -n "$3" ];then	
+		# if argument 3 is a valid file
+#		if [ -f "$3" ];then
+				#convert filename using sed pattern			
+#				filename=$(basename "$3" | sed "$2" )
+				#compute new name, by changing basename to all lowercase
+#				new_name="$(dirname "$3")/$filename"
+				#replace the name of the file
+#				mv -T "$3" "${new_name}"
+#				echo "Changed name: $new_name"
+				#call modify recursively but erasing the first argument that has been already converted (which would be $3)
+#			else
+#			echo "Error, no file "$3" found"
+#		fi
+#		./$0 -r $2 ${@:4}
+#	fi
+	#---------------------------------------
